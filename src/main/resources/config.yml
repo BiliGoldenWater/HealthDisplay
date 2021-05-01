@@ -3,14 +3,29 @@ fileWatchService: true
 
 # Settings
 settings:
-  # The entity list is blacklist or whitelist
+  # When debug is true, plugin will output debug message.
+  debug: false
+  # Continuous update the entity health display.
+  continuousUpdate:
+    # If it's true then the entity health display is continuous update, rather than update once
+    enable: true
+    # Duration time(second(s))(When the entity dead it will be terminated).
+    duration: 5
+    # Periodic intervals(ms)(Update frequency).
+    period: 100
+  # If it's true then the entity list is blacklist rather than whitelist
   isBlacklist: true
+  # Entity list (Case sensitive(Maybe)
+  entityList:
+    - XP_ORB
 
 # Message
 message:
-  # if it's true then use jsonMessage rather than normalText
-  useJson: true
-  # jsomMessage
-  json: ''
-  # normalText
-  text: '[]'
+  # Text
+  text: '{{entityName}}§7: [§r{{healthNotEmpty}}{{healthEmpty}}§7]§r §r{{healthNum}}§7/§r{{healthNumMax}}§r'
+  # Health bar length
+  healthBarLength: 10
+  # Health bar not empty part
+  healthBarNotEmpty: '§c❤§r'
+  # Health bar empty part
+  healthBarEmpty: '§8❤§r'

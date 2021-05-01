@@ -31,7 +31,7 @@ public class ConfigWatchService {
                 public void run() {
                     try {
                         WatchKey key;
-                        while ((key = watchService.take()) != null) {
+                        while ((key = watchService.take()) != null && !this.isCancelled()) {
                             for (WatchEvent<?> event : key.pollEvents()) {
                                 if (event.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
                                     if (event.context().toString().equals("config.yml")) {

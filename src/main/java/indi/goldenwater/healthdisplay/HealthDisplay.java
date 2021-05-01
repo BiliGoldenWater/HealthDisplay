@@ -1,10 +1,17 @@
 package indi.goldenwater.healthdisplay;
 
+import indi.goldenwater.healthdisplay.listeners.OnEntityDamageByEntityEvent;
+import indi.goldenwater.healthdisplay.listeners.OnPlayerQuitEvent;
 import indi.goldenwater.healthdisplay.utils.ConfigWatchService;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class HealthDisplay extends JavaPlugin {
     private static HealthDisplay instance;
+    private final Map<String, BukkitRunnable> playerRunnable = new HashMap<>();
     private ConfigWatchService watchService;
 
 
@@ -19,6 +26,9 @@ public final class HealthDisplay extends JavaPlugin {
             watchService.register("fileWatchService");
         }
 
+        getServer().getPluginManager().registerEvents(new OnEntityDamageByEntityEvent(), this);
+        getServer().getPluginManager().registerEvents(new OnPlayerQuitEvent(), this);
+
         getLogger().info("Enabled.");
     }
 
@@ -27,6 +37,10 @@ public final class HealthDisplay extends JavaPlugin {
         // Plugin shutdown logic
         watchService.unregister();
         getLogger().info("Disabled.");
+    }
+
+    public Map<String, BukkitRunnable> getPlayerRunnable() {
+        return playerRunnable;
     }
 
     public static HealthDisplay getInstance() {
