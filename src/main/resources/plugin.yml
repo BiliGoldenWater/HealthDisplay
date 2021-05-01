@@ -1,0 +1,5 @@
+name: HealthDisplay
+version: ${project.version}
+main: indi.goldenwater.healthdisplay.HealthDisplay
+authors: [ Golden_Water ]
+description: A plugin when player attck entity will display that entity's health for that player.

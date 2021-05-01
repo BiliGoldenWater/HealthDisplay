@@ -1,0 +1,16 @@
+# Monitor config file change/delete and reload/release config file.
+fileWatchService: true
+
+# Settings
+settings:
+  # The entity list is blacklist or whitelist
+  isBlacklist: true
+
+# Message
+message:
+  # if it's true then use jsonMessage rather than normalText
+  useJson: true
+  # jsomMessage
+  json: ''
+  # normalText
+  text: '[]'
