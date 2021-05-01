@@ -74,6 +74,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
 
         BukkitRunnable runnable = new BukkitRunnable() {
             private boolean end = false;
+
             @SuppressWarnings("BusyWait")
             @Override
             public void run() {
@@ -98,9 +99,9 @@ public class OnEntityDamageByEntityEvent implements Listener {
     }
 
     public void showHealth(JavaPlugin plugin, Configuration config, Player targetPlayer, Entity entity) {
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
-            public void run(){
+            public void run() {
                 if (!(entity instanceof LivingEntity)) return;
 
                 final LivingEntity livingEntity = (LivingEntity) entity;
@@ -108,6 +109,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
                 final int healthBarLength = config.getInt("message.healthBarLength", 20);
                 final String healthBarNotEmpty = config.getString("message.healthBarNotEmpty");
                 final String healthBarEmpty = config.getString("message.healthBarEmpty");
+                final int healthNumDecimalPlaces = config.getInt("message.healthNumDecimalPlaces");
 
                 final double maxHealth = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
                 final double health = livingEntity.getHealth();
@@ -123,8 +125,8 @@ public class OnEntityDamageByEntityEvent implements Listener {
                         entity.getCustomName() == null ? entity.getName() : entity.getCustomName())
                         .replace("{{healthNotEmpty}}", healthNotEmptyStr)
                         .replace("{{healthEmpty}}", healthEmptyStr)
-                        .replace("{{healthNum}}", String.format("%.1f", health))
-                        .replace("{{healthNumMax}}", String.valueOf(maxHealth));
+                        .replace("{{healthNum}}", String.format("%." + healthNumDecimalPlaces + "f", health))
+                        .replace("{{healthNumMax}}", String.format("%." + healthNumDecimalPlaces + "f", maxHealth));
 
                 BaseComponent[] message;
 

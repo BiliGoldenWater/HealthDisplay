@@ -29,3 +29,5 @@ message:
   healthBarNotEmpty: '§c❤§r'
   # Health bar empty part
   healthBarEmpty: '§8❤§r'
+  # Decimal places of health number display
+  healthNumDecimalPlaces: 2
