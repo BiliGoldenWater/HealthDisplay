@@ -74,6 +74,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
 
         BukkitRunnable runnable = new BukkitRunnable() {
             private boolean end = false;
+            @SuppressWarnings("BusyWait")
             @Override
             public void run() {
                 long time_start = System.currentTimeMillis();
