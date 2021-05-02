@@ -3,6 +3,7 @@ package indi.goldenwater.healthdisplay;
 import indi.goldenwater.healthdisplay.listeners.OnEntityDamageByEntityEvent;
 import indi.goldenwater.healthdisplay.listeners.OnPlayerQuitEvent;
 import indi.goldenwater.healthdisplay.utils.ConfigWatchService;
+import indi.goldenwater.healthdisplay.utils.ConfigWatchService.DoSomeThing;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,7 +24,18 @@ public final class HealthDisplay extends JavaPlugin {
 
         if (getConfig().getBoolean("fileWatchService")) {
             watchService = new ConfigWatchService(this);
-            watchService.register("fileWatchService");
+            DoSomeThing doSomeThing = new DoSomeThing() {
+                @Override
+                public void reload() {
+                    reloadConfig();
+                }
+
+                @Override
+                public void release() {
+                    saveDefaultConfig();
+                }
+            };
+            watchService.register("fileWatchService", doSomeThing);
         }
 
         getServer().getPluginManager().registerEvents(new OnEntityDamageByEntityEvent(), this);
