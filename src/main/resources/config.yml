@@ -1,3 +1,5 @@
+# After change language files you need change once config file or restart/reload server to reload the language files.
+
 # Monitor config file change/delete and reload/release config file.
 fileWatchService: true
 

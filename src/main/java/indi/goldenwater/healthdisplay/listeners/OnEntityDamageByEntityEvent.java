@@ -144,16 +144,13 @@ public class OnEntityDamageByEntityEvent implements Listener {
     public String getName(I18nManager i18n, String lang, Entity entity) {
         String entityName = entity.getName();
         if (lang.equals("en_us")) {
-            System.out.println("a");
             return entityName;
         } else {
             String entityType = entity.getType().toString().toLowerCase();
             String result = i18n.getL10n(lang, entityType);
             if (result.equals(entityType)) {
-                System.out.println("b");
                 return entityName;
             } else {
-                System.out.println("c");
                 return result;
             }
         }
