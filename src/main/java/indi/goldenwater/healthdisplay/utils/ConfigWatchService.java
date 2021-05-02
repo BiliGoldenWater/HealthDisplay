@@ -18,7 +18,7 @@ public class ConfigWatchService {
     /**
      * @param configKey config key of this feature(bool) if configKey is null then not monitor that.
      */
-    public void register(String configKey) {
+    public void register(String configKey, DoSomeThing doSomeThing) {
         if (configKey != null && !plugin.getConfig().getBoolean(configKey)) {
             return;
         }
@@ -35,11 +35,11 @@ public class ConfigWatchService {
                             for (WatchEvent<?> event : key.pollEvents()) {
                                 if (event.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
                                     if (event.context().toString().equals("config.yml")) {
-                                        plugin.saveDefaultConfig();
+                                        doSomeThing.release();
                                     }
                                 } else if (event.kind().equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
                                     if (event.context().toString().equals("config.yml")) {
-                                        plugin.reloadConfig();
+                                        doSomeThing.reload();
                                         if (configKey != null && !plugin.getConfig().getBoolean(configKey)) {
                                             this.cancel();
                                         }
@@ -68,5 +68,10 @@ public class ConfigWatchService {
         if (!watchServiceRunnable.isCancelled()) {
             watchServiceRunnable.cancel();
         }
+    }
+
+    public interface DoSomeThing {
+        void reload();
+        void release();
     }
 }
