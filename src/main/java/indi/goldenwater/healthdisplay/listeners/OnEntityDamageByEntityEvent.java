@@ -1,6 +1,7 @@
 package indi.goldenwater.healthdisplay.listeners;
 
 import indi.goldenwater.healthdisplay.HealthDisplay;
+import indi.goldenwater.healthdisplay.utils.I18nManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -12,7 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -98,13 +98,15 @@ public class OnEntityDamageByEntityEvent implements Listener {
         runnable.runTaskAsynchronously(plugin);
     }
 
-    public void showHealth(JavaPlugin plugin, Configuration config, Player targetPlayer, Entity entity) {
+    public void showHealth(HealthDisplay plugin, Configuration config, Player targetPlayer, Entity entity) {
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (!(entity instanceof LivingEntity)) return;
 
                 final LivingEntity livingEntity = (LivingEntity) entity;
+                final I18nManager i18n = plugin.getI18nManager();
+
                 final String originMessage = config.getString("message.text");
                 final int healthBarLength = config.getInt("message.healthBarLength", 20);
                 final String healthBarNotEmpty = config.getString("message.healthBarNotEmpty");
@@ -122,7 +124,9 @@ public class OnEntityDamageByEntityEvent implements Listener {
                 final String healthEmptyStr = repeatString(healthEmptyLength, healthBarEmpty);
 
                 String finalMessage = originMessage.replace("{{entityName}}",
-                        entity.getCustomName() == null ? entity.getName() : entity.getCustomName())
+                        entity.getCustomName() == null ?
+                                getName(i18n, targetPlayer.getLocale(), entity) :
+                                entity.getCustomName())
                         .replace("{{healthNotEmpty}}", healthNotEmptyStr)
                         .replace("{{healthEmpty}}", healthEmptyStr)
                         .replace("{{healthNum}}", String.format("%." + healthNumDecimalPlaces + "f", health))
@@ -135,6 +139,24 @@ public class OnEntityDamageByEntityEvent implements Listener {
                 targetPlayer.spigot().sendMessage(ChatMessageType.ACTION_BAR, message);
             }
         }.runTaskLaterAsynchronously(plugin, 1);
+    }
+
+    public String getName(I18nManager i18n, String lang, Entity entity) {
+        String entityName = entity.getName();
+        if (lang.equals("en_us")) {
+            System.out.println("a");
+            return entityName;
+        } else {
+            String entityType = entity.getType().toString().toLowerCase();
+            String result = i18n.getL10n(lang, entityType);
+            if (result.equals(entityType)) {
+                System.out.println("b");
+                return entityName;
+            } else {
+                System.out.println("c");
+                return result;
+            }
+        }
     }
 
     public String repeatString(int times, String str) {
