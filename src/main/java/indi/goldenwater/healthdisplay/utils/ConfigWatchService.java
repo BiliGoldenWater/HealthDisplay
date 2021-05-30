@@ -10,6 +10,8 @@ public class ConfigWatchService {
     private final JavaPlugin plugin;
     private WatchService watchService;
     private BukkitRunnable watchServiceRunnable;
+    private WatchKey key;
+    private boolean isRunning;
 
     public ConfigWatchService(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -19,6 +21,7 @@ public class ConfigWatchService {
      * @param configKey config key of this feature(bool) if configKey is null then not monitor that.
      */
     public void register(String configKey, CheckFile checkFile, DoSomeThing doSomeThing) {
+        isRunning = true;
         if (configKey != null && !plugin.getConfig().getBoolean(configKey)) {
             return;
         }
@@ -30,8 +33,9 @@ public class ConfigWatchService {
                 @Override
                 public void run() {
                     try {
-                        WatchKey key;
-                        while ((key = watchService.take()) != null && !this.isCancelled()) {
+                        System.out.println("1");
+                        while (isRunning && (key = watchService.take()) != null) {
+                            System.out.println("2");
                             for (WatchEvent<?> event : key.pollEvents()) {
                                 if (event.kind().equals(StandardWatchEventKinds.ENTRY_DELETE)) {
                                     if (checkFile.check(event.context().toString())) {
@@ -46,15 +50,20 @@ public class ConfigWatchService {
                                     }
                                 }
                             }
+                            System.out.println("3");
                             key.reset();
                         }
+                        System.out.println("4");
                         try {
                             watchService.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        System.out.println("5");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
+                    } catch (ClosedWatchServiceException ignored){
+
                     }
                 }
             };
@@ -65,8 +74,13 @@ public class ConfigWatchService {
     }
 
     public void unregister() {
-        if (!watchServiceRunnable.isCancelled()) {
-            watchServiceRunnable.cancel();
+        isRunning = false;
+        if (watchService != null) {
+            try {
+                watchService.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
