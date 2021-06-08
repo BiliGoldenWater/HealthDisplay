@@ -95,6 +95,10 @@ public class I18nManager {
         return langData.get(key); // 返回 指定语言中 的 指定数据
     }
 
+    public L10nGetter getL10nGetter(String language) {
+        return new L10nGetter(language, this);
+    }
+
     public void releaseDefaultLangFile(JavaPlugin plugin, String folderInJar,
                                        String langListFileName, boolean replace) {
         InputStream inputStream = plugin.getResource(folderInJar + "/" + langListFileName); // 获取语言列表文件
@@ -189,6 +193,24 @@ public class I18nManager {
 
     public void reload() {
         this.initialized = initialize(dataPath, defaultLanguage.toLowerCase()) == StatusCode.success;
+    }
+
+    public static class L10nGetter {
+        private final String language;
+        private final I18nManager i18nManager;
+
+        public L10nGetter(String language, I18nManager i18nManager) {
+            this.language = language;
+            this.i18nManager = i18nManager;
+        }
+
+        public String l(String key) {
+            return this.i18nManager.getL10n(this.language, key);
+        }
+
+        public String getLanguage() {
+            return language;
+        }
     }
 
     public static class StatusCode {

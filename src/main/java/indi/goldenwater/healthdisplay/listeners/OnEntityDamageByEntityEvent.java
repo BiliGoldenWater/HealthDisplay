@@ -105,7 +105,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
                 if (!(entity instanceof LivingEntity)) return;
 
                 final LivingEntity livingEntity = (LivingEntity) entity;
-                final I18nManager i18n = plugin.getI18nManager();
+                final I18nManager.L10nGetter l = plugin.getI18nManager().getL10nGetter(targetPlayer.getLocale());
 
                 final String originMessage = config.getString("message.text");
                 final int healthBarLength = config.getInt("message.healthBarLength", 20);
@@ -125,7 +125,7 @@ public class OnEntityDamageByEntityEvent implements Listener {
 
                 String finalMessage = originMessage.replace("{{entityName}}",
                         entity.getCustomName() == null ?
-                                getName(i18n, targetPlayer.getLocale(), entity) :
+                                getName(l, entity) :
                                 entity.getCustomName())
                         .replace("{{healthNotEmpty}}", healthNotEmptyStr)
                         .replace("{{healthEmpty}}", healthEmptyStr)
@@ -141,13 +141,13 @@ public class OnEntityDamageByEntityEvent implements Listener {
         }.runTaskLaterAsynchronously(plugin, 1);
     }
 
-    public String getName(I18nManager i18n, String lang, Entity entity) {
+    public String getName(I18nManager.L10nGetter l, Entity entity) {
         String entityName = entity.getName();
-        if (lang.equals("en_us")) {
+        if (l.getLanguage().equalsIgnoreCase("en_us")) {
             return entityName;
         } else {
             String entityType = entity.getType().toString().toLowerCase();
-            String result = i18n.getL10n(lang, entityType);
+            String result = l.l(entityType);
             if (result.equals(entityType)) {
                 return entityName;
             } else {
