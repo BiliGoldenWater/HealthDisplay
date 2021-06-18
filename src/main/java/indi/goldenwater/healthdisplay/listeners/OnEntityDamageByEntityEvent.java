@@ -80,7 +80,9 @@ public class OnEntityDamageByEntityEvent implements Listener {
             public void run() {
                 long time_start = System.currentTimeMillis();
 
-                while (System.currentTimeMillis() < time_start + (durationSecond * 1000L) && !this.isCancelled()) {
+                while (System.currentTimeMillis() < time_start + (durationSecond * 1000L) &&
+                        !this.isCancelled() &&
+                        playerRunnable.get(playerName) == this) {
                     showHealth(plugin, config, targetPlayer, entity);
                     try {
                         Thread.sleep(periodMillis);

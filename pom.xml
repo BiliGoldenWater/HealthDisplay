@@ -6,7 +6,7 @@
 
     <groupId>indi.goldenwater</groupId>
     <artifactId>HealthDisplay</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
     <packaging>jar</packaging>
 
     <name>HealthDisplay</name>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

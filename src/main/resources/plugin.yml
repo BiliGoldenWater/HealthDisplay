@@ -3,6 +3,7 @@ version: ${project.version}
 main: indi.goldenwater.healthdisplay.HealthDisplay
 authors: [ Golden_Water ]
 description: A plugin when player attck entity will display that entity's health for that player.
+api-version: 1.13
 permissions:
   healthdisplay.*:
     description: Plugin main permission
