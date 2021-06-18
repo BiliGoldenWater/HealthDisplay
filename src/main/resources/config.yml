@@ -33,3 +33,5 @@ message:
   healthBarEmpty: '§8❤§r'
   # Decimal places of health number display
   healthNumDecimalPlaces: 2
+  # Rounding up the heath value used for display
+  roundUp: true

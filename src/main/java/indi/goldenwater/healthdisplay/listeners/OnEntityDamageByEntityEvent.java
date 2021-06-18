@@ -109,22 +109,26 @@ public class OnEntityDamageByEntityEvent implements Listener {
                 final LivingEntity livingEntity = (LivingEntity) entity;
                 final I18nManager.L10nGetter l = plugin.getI18nManager().getL10nGetter(targetPlayer.getLocale());
 
-                final String originMessage = config.getString("message.text");
+                final String originMessage = config.getString("message.text","{{entityName}}§7: [§r{{healthNotEmpty}}{{healthEmpty}}§7]§r §r{{healthNum}}§7/§r{{healthNumMax}}§r");
                 final int healthBarLength = config.getInt("message.healthBarLength", 20);
                 final String healthBarNotEmpty = config.getString("message.healthBarNotEmpty");
                 final String healthBarEmpty = config.getString("message.healthBarEmpty");
                 final int healthNumDecimalPlaces = config.getInt("message.healthNumDecimalPlaces");
+                final boolean healthBarRoundUp = config.getBoolean("message.roundUp", true);
 
                 final double maxHealth = livingEntity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
                 final double health = livingEntity.getHealth();
                 final double healthPercent = health / maxHealth;
 
-                final int healthNotEmptyLength = (int) (healthBarLength * healthPercent);
+                final int healthNotEmptyLength = (int) (healthBarRoundUp ?
+                        Math.ceil(healthBarLength * healthPercent) :
+                        (healthBarLength * healthPercent));
                 final int healthEmptyLength = healthBarLength - healthNotEmptyLength;
 
                 final String healthNotEmptyStr = repeatString(healthNotEmptyLength, healthBarNotEmpty);
                 final String healthEmptyStr = repeatString(healthEmptyLength, healthBarEmpty);
 
+                assert originMessage != null;
                 String finalMessage = originMessage.replace("{{entityName}}",
                         entity.getCustomName() == null ?
                                 getName(l, entity) :
